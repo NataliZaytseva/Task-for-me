@@ -38,12 +38,12 @@ public enum ColumnNames {
         System.out.println();
     }
 
-    public static List<Salaries> findColumnAndSort(String columnName, List<String> lines, String delimiter) {
+    public static List<Salaries> findColumnAndSort(String columnName, List<String> lines/*, String delimiter*/) {
         List<Salaries> salaries = null;
 
         for (ColumnNames names : ColumnNames.values()) {
             if (names.analizer.analize(columnName)) {
-                Token token = new Token(delimiter);
+                Token token = new Token();
                 salaries = token.tokenSeparator(lines);
                 Collections.sort(salaries, names.compareAction);
             }

@@ -1,8 +1,6 @@
 import readFrom.readImpl.ReadFile;
 import saveTo.saveImpl.SaveToFile;
 import ua.natali.t03.Salaries;
-import verification.FileExistVerification;
-import verification.NullDataVerification;
 import verification.Verification;
 
 import java.io.BufferedReader;
@@ -16,20 +14,15 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        FileExistVerification fileExistVerification = new FileExistVerification();
-        String filenameInput = fileExistVerification.fileExistVerification();
-        System.out.println(filenameInput);
-        NullDataVerification nullData = new NullDataVerification();
-        String fileName =   nullData.nullDataVerification(filenameInput);
-        ReadFile readAndWrite = new ReadFile();
-        List<String> lines = readAndWrite.readFile(fileName);
+        String filenameInput = Verification.fileExistVerification();
+//        System.out.println(filenameInput);
+        String fileName =   Verification.nullDataVerification(filenameInput);
+        ReadFile readFile = new ReadFile();
+        List<String> lines = readFile.readFile(fileName);
         ColumnNames.names();
-        System.out.println("Enter the column name ");
-        String word = bufferedReader.readLine();
-        System.out.println("Enter delimiter");
-        String delimiter = bufferedReader.readLine();
-        List<Salaries> salaries = ColumnNames.findColumnAndSort(word, lines, delimiter);
+        String word = Verification.columnVerification();
+        List<Salaries> salaries = ColumnNames.findColumnAndSort(word, lines);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter name of file to save ");
         String fileOutput = bufferedReader.readLine();
         String filenameOutput = Verification.fileOutputVerification(fileOutput);
