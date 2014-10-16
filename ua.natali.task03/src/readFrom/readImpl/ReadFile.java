@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ReadFile implements Read {
 
-    public List<String> readFile(String fileInput) throws IOException {
+    public List<String> readFileLines(String fileInput) throws IOException {
         List<String> list = new ArrayList<String>();
         BufferedReader reader = null;
         try {

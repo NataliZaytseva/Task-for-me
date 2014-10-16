@@ -30,7 +30,7 @@ public class SaveToFile implements SaveTo {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
-            System.out.println("The table has not column with this name");
+            System.out.println();
         }
         System.out.println("Your file will be save at this direction " + file.getAbsoluteFile());
     }
