@@ -1,29 +1,26 @@
 package src.implementation;
 
-import src.interfaces.PrintableBehaviour;
-
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Natali on 14.11.2014.
  */
-//public class VerticalPrintBehaviour extends TablePrintableBehaviour {
-public class VerticalPrintBehaviour extends PrintableBehaviour<List<Map<String, Object>>> {
-    Table table;
+public class VerticalPrintBehaviour extends TablePrintableBehaviour {
+
     public VerticalPrintBehaviour(Table table) {
-        this.table = table;
+        super(table);
     }
 
     protected void printHeader(int currentPage) {
-        if (currentPage > table.getHeaderList().size()/(table.getPageSize() == 0 ? 1 : table.getPageSize()) || currentPage <= 0) {
+        if (currentPage > table.getHeaderList().size() / (table.getPageSize() == 0 ? 1 : table.getPageSize()) || currentPage <= 0) {
             throw new NoSuchElementException("Sorry we don't have this page");
         }
-        int firstColumn = table.getFirstRowOfPage(currentPage) ;
+        int firstColumn = table.getFirstRowOfPage(currentPage);
         int lastColumn = table.getLastRowOfPage(currentPage);
 
-        printBorder();
-        String formatKeys = "|%-13.1s| ";
         List<String> headerList = table.getHeaderList();
         for (int i = firstColumn; i < lastColumn; i++) {
             String s = headerList.get(i);
@@ -54,7 +51,6 @@ public class VerticalPrintBehaviour extends PrintableBehaviour<List<Map<String, 
     }
 
     protected void printBody(List<Map<String, Object>> rowsForPrint, int currentPage) {
-        String formatValue = "|%-13.10s| ";
 
         for (Map<String, Object> row : rowsForPrint) {
             List<String> headerList = table.getHeaderList();
@@ -65,48 +61,41 @@ public class VerticalPrintBehaviour extends PrintableBehaviour<List<Map<String, 
                 if (object == null) {
                     object = " ";
                 }
-                if (object instanceof Integer) {
-                    object = "||" + object + "|| ";
-                } else if (object instanceof Double) {
-                    object = "_ _" + object + "_ _ ";
-                } else if (object instanceof BigDecimal) {
-                    object = "$" + object + " ";
-                } else if (object instanceof String) {
-                    object = "*" + object + "* ";
-                } else if (object instanceof Float) {
-                    object = "#" + object + "# ";
-                } else if (object instanceof Byte) {
-                    object = "@" + object + "@ ";
-                } else if (object instanceof Long) {
-                    object = "LLL" + object + " ";
-                } else if (object == null) {
-                    object = "%" + object + "% ";
-                }
-                System.out.printf(formatValue, object);
+                Object str = checkObject(object);
+                System.out.printf(formatValue, str);
             }
             System.out.println();
         }
     }
 
-
     protected void printBorder() {
-        int borderLenght;
-        if (table.getPageSize() == 0 ){
-             borderLenght = 15;
-        }else {
-         borderLenght = (table.getHeaderList().size()/ table.getPageSize())* 10 +1;}
-        for (int i = 0; i < borderLenght; i++) {
+        int borderLength;
+        if (table.getPageSize() == 0) {
+            borderLength = 15;
+        } else {
+            borderLength = (table.getHeaderList().size() / table.getPageSize()) * 10 + 1;
+        }
+        for (int i = 0; i < borderLength; i++) {
+            System.out.print("=");
+        }
+        System.out.println();
+    }
+    protected void printBorder(int printToColumn) {
+        int borderLength = (printToColumn * 16) - 1;
+        for (int i = 0; i < borderLength; i++) {
             System.out.print("=");
         }
         System.out.println();
     }
 
+    @Override
     protected void printHeaderForColumnNames() {
         int widthForColumnName;
-        if (table.getPageSize() == 0 ){
+        if (table.getPageSize() == 0) {
             widthForColumnName = 1;
-        }else {
-        widthForColumnName =  (table.getHeaderList().size()/ table.getPageSize())* 10 -2 ;}
+        } else {
+            widthForColumnName = (table.getHeaderList().size() / table.getPageSize()) * 10 - 2;
+        }
         System.out.printf("|%-" + widthForColumnName + "s | %n", "Column_Names");
     }
 

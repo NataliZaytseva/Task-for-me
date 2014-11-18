@@ -1,8 +1,5 @@
 package src.implementation;
 
-import src.interfaces.PrintableBehaviour;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,31 +29,30 @@ public class VerticalPrintFirstFewPagesBehaviour extends VerticalPrintBehaviour 
         }
         List<Map<String, Object>> currentPageObject = new ArrayList<>();
 
-            for (int i = firstRowOfPage; i < lastRowOfPage && i < table.getRows().size(); i++) {
-                    currentPageObject.add(table.getRows().get(i));
+        for (int i = firstRowOfPage; i < lastRowOfPage && i < table.getRows().size(); i++) {
+            currentPageObject.add(table.getRows().get(i));
         }
 
-
-        printBorder();
+        printBorder(printToColumn);
         printHeaderForColumnNames();
-        printBorder();
+        printBorder(printToColumn);
         printHeader(printToColumn);
         printBody(currentPageObject, printToColumn);
-        printBorder();
-
+        printBorder(printToColumn);
     }
 
     @Override
     public void printPage(int currentPage) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
     protected void printHeader(int currentPage) {
-        if (currentPage > table.getHeaderList().size()/(table.getPageSize() == 0 ? 1 : table.getPageSize()) || currentPage <= 0) {
+        if (currentPage > table.getHeaderList().size() / (table.getPageSize() == 0 ? 1 : table.getPageSize()) || currentPage <= 0) {
             throw new NoSuchElementException("Sorry we don't have this page");
         }
         int lastColumn = table.getLastRowOfPage(currentPage);
 
-        String formatKeys = "|%-13.1s| ";
         List<String> headerList = table.getHeaderList();
         for (int i = 0; i < lastColumn; i++) {
             String s = headerList.get(i);
@@ -64,8 +60,9 @@ public class VerticalPrintFirstFewPagesBehaviour extends VerticalPrintBehaviour 
         }
         System.out.println();
     }
+
+    @Override
     protected void printBody(List<Map<String, Object>> rowsForPrint, int currentPage) {
-        String formatValue = "|%-13.10s| ";
 
         for (Map<String, Object> row : rowsForPrint) {
             List<String> headerList = table.getHeaderList();
@@ -76,27 +73,10 @@ public class VerticalPrintFirstFewPagesBehaviour extends VerticalPrintBehaviour 
                 if (object == null) {
                     object = " ";
                 }
-                if (object instanceof Integer) {
-                    object = "||" + object + "|| ";
-                } else if (object instanceof Double) {
-                    object = "_ _" + object + "_ _ ";
-                } else if (object instanceof BigDecimal) {
-                    object = "$" + object + " ";
-                } else if (object instanceof String) {
-                    object = "*" + object + "* ";
-                } else if (object instanceof Float) {
-                    object = "#" + object + "# ";
-                } else if (object instanceof Byte) {
-                    object = "@" + object + "@ ";
-                } else if (object instanceof Long) {
-                    object = "LLL" + object + " ";
-                } else if (object == null) {
-                    object = "%" + object + "% ";
-                }
-                System.out.printf(formatValue, object);
+                Object str =  checkObject(object);
+                System.out.printf(formatValue, str);
             }
             System.out.println();
         }
     }
-
 }

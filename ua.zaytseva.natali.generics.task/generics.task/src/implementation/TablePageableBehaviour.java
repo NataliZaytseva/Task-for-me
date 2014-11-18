@@ -1,6 +1,5 @@
 package src.implementation;
 
-import src.interfaces.Pageable;
 import src.interfaces.PageableBehaviour;
 
 /**
