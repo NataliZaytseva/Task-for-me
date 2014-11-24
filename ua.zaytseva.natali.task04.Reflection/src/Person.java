@@ -15,11 +15,6 @@ public class Person {
         this.age = age;
     }
 
-//    public void setAge(int age, String Name) {
-//        this.age = age;
-//        this.Name = Name;
-//    }
-
     public void setAge(double age) {
         this.age = (int) age;
     }
